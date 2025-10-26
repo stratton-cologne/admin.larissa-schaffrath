@@ -87,7 +87,7 @@ import { onMounted, computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@stratton-cologne/vue-smart-toast'
-import CurvedImg6 from '@/assets/images/background/default.jpg'
+import CurvedImg6 from '@/assets/image/background/default.jpg'
 import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()

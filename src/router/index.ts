@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
+import { mainRoles, adminOnly, superAdmin, hasAccess } from "@/types/roles";
+
 import { useAuthStore } from "@/stores/auth";
+import { useUiStore } from "@/stores/ui";
 
 /** =========================
  *   VIEWS (Lazy Loaded)
@@ -14,6 +17,14 @@ const Dashboard = () => import("@/views/DashboardView.vue");
 declare module "vue-router" {
     interface RouteMeta {
         requiresAuth?: boolean;
+        sidebar?: {
+            title?: string;
+            icon?: string;
+            section?: string;
+            sectionOrder?: number;
+            order?: number;
+            hidden?: boolean;
+        };
     }
 }
 
@@ -28,6 +39,14 @@ export const routes: RouteRecordRaw[] = [
         component: SignIn,
         meta: {
             requiresAuth: false,
+            sidebar: {
+                title: "Anmelden",
+                icon: "login",
+                hidden: true,
+                section: "Auth",
+                sectionOrder: 99,
+                order: 1,
+            },
         },
     },
 
@@ -44,6 +63,14 @@ export const routes: RouteRecordRaw[] = [
         component: Dashboard,
         meta: {
             requiresAuth: true,
+            roles: mainRoles,
+            sidebar: {
+                title: "Dashboard",
+                icon: "home",
+                section: "Übersicht",
+                sectionOrder: 1,
+                order: 1,
+            },
         },
     },
 ];
@@ -73,6 +100,25 @@ router.beforeEach((to, from, next) => {
         // Otherwise, allow navigation.
         next();
     }
+});
+
+// After each (Titel, Telemetrie, etc.)
+router.afterEach((to) => {
+    const ui = useUiStore();
+    ui.closeOnMobile();
+
+    const title =
+        to.meta?.title ?? (typeof to.name === "string" ? to.name : "App");
+
+    const appTitle =
+        import.meta.env.VITE_APP_TITLE ||
+        document
+            .querySelector('meta[name="application-name"]')
+            ?.getAttribute("content") ||
+        document.title ||
+        "App";
+
+    document.title = `${title} · ${appTitle}`;
 });
 
 export default router;
