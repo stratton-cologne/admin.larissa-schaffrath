@@ -99,7 +99,6 @@ const appTitle = import.meta.env.VITE_APP_TITLE || 'Stratton Cologne'
 const envLogo = (import.meta.env.VITE_APP_LOGO_URL as string) || ''
 
 const localLogos = import.meta.glob('/src/assets/logo.*', { eager: true, as: 'url' })
-const firstLocalLogo = Object.values(localLogos)[0] as string | undefined
 
 const form = reactive({
     email: '',
