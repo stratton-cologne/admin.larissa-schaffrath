@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@layer theme, base, components, utilities;
+
+/* @import "./notifications.scss"; */
+
+@import "./normalize.css";
+
+@theme {
+    /* Basis */
+    --color-primary-50: #fffaf2;
+    --color-primary-100: #fff5e6;
+    --color-primary-200: #ffebcc;
+    --color-primary-300: #ffe0b2;
+    --color-primary-400: #ffd699;
+    --color-primary-500: #ff9900;
+    --color-primary-600: #e68a00;
+    --color-primary-700: #cc7a00;
+    --color-primary-800: #b26b00;
+    --color-primary-900: #995c00;
+    --color-primary-950: #804c00;
+
+    /* Optional: Alias für „primary“ auf 500 */
+    --color-primary: var(--color-primary-500);
+
+    --color-gray: #6b7280; /* Grau */
+    --color-green: #10b981; /* Grün */
+    --color-white: #ffffff;
+
+    --color-blue: #1e3a8a;
+    --color-gray: #6b7280;
+    --color-green: #10b981;
+
+    --radius-2xl: 1rem;
+
+    --spacing-75: 18.75rem; /* min-h-75 */
+
+    /* Viewport-Höhen als Tokens */
+    --spacing-50-screen: 50vh; /* min-h-50-screen */
+    --spacing-75-screen: 75vh; /* min-h-75-screen */
+    --spacing-85-screen: 85vh; /* min-h-85-screen */
+
+    --text-h1: 3rem; /* 48px */
+    --leading-h1: 1.25;
+
+    --text-h2: 2.25rem; /* 36px */
+    --leading-h2: 1.3;
+
+    --text-h3: 1.875rem; /* 30px */
+    --leading-h3: 1.375;
+
+    --text-h4: 1.5rem; /* 24px */
+    --leading-h4: 1.375;
+
+    --text-h5: 1.25rem; /* 20px */
+    --leading-h5: 1.375;
+
+    --text-h6: 1rem; /* 16px */
+    --leading-h6: 1.625;
+}
+
+@layer base {
+    :root {
+        --brand-blue: #1e3a8a;
+        --brand-gray: #6b7280;
+        --brand-green: #10b981;
+    }
+}
+
+@layer base {
+}
