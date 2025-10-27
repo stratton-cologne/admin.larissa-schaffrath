@@ -42,6 +42,13 @@ export const useAuthStore = defineStore("auth", () => {
         }
     };
 
+    const fetchUser = async () => {
+        if (!token.value) return null;
+        const response = await axios.get("/api/me");
+        user.value = response.data;
+        return user.value;
+    };
+
     const updatePassword = async (
         currentPassword: string,
         newPassword: string,
@@ -58,6 +65,7 @@ export const useAuthStore = defineStore("auth", () => {
         isAuthenticated,
         login,
         logout,
+        fetchUser,
         updatePassword,
     };
 });

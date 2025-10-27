@@ -1,4 +1,4 @@
-<!-- src/layouts/app-layout.vue -->
+<!-- src/layouts/layout.vue -->
 <template>
     <Notifications />
 
@@ -7,6 +7,8 @@
 
     <main
         class="ease-soft-in-out xl:ml-68.5 relative min-h-screen flex flex-col rounded-xl transition-all duration-200">
+        <AppNavbar v-if="!hideChrome" @toggle-sidenav="ui.toggleSidebar()" @open-settings="openSettings = true"
+            @search="onSearch" />
         <section class="main-content flex-1 min-h-0 overflow-auto">
             <RouterView />
         </section>
@@ -16,18 +18,20 @@
 <script setup lang="ts">
 /**
  * @file app-layout.vue
- * @brief Hauptlayout mit Sidebar, Benachrichtigungen und Router-Outlet.
+ * @brief Hauptlayout mit Sidebar, Navbar, Benachrichtigungen und Router-Outlet.
  * @details
- *  - Blendet die Chrome (Sidebar) auf Auth-/Hidden-Routen aus.
+ *  - Blendt die Chrome (Sidebar + Navbar) auf Auth-/Hidden-Routen aus.
  *  - Bezieht Logo-URL und App-Titel aus `useLogoUrl`.
+ *  - Lädt bei vorhandenem Token die Userdaten beim Mount.
  */
 
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import { Notifications } from '@stratton-cologne/vue-smart-toast'
 
-/** Layout-Komponenten */
+/** Layout-/UI-Komponenten */
 import Sidebar from '@/components/sidebar/sidebar.vue'
+import AppNavbar from '@/components/navbar/app-navbar.vue'
 
 /** Stores */
 import { useAuthStore } from '@/stores/auth'
@@ -47,9 +51,9 @@ const ui = useUiStore()
 const { appTitle, logoUrl } = useLogoUrl()
 
 /**
- * @brief Steuert, ob die Chrome (Sidebar) angezeigt wird.
+ * @brief Steuert, ob die Chrome (Sidebar + Navbar) angezeigt wird.
  * @details
- *  - Versteckt bei `SignIn`.
+ *  - Versteckt bei Route `SignIn`.
  *  - Versteckt, wenn `meta.sidebar.hidden` und Section leer oder "Auth".
  */
 const hideChrome = computed<boolean>(() => {
@@ -57,5 +61,42 @@ const hideChrome = computed<boolean>(() => {
     const s: any = route.meta?.sidebar
     if (s?.hidden && (s.section === 'Auth' || !s.section)) return true
     return false
+})
+
+/* ============================================================================
+ * Navbar-Daten & UI-Zustände
+ * ==========================================================================*/
+
+/** @brief Öffnet das Settings-Panel (Platzhalter-State). */
+const openSettings = ref(false)
+
+/* ============================================================================
+ * Events/Handler
+ * ==========================================================================*/
+
+/**
+ * @brief Handler für die Suche in der Navbar.
+ * @param q Suchbegriff.
+ */
+function onSearch(q: string): void {
+    // TODO: Suche triggern
+    // console.log('Search:', q)
+}
+
+/* ============================================================================
+ * Lifecycle
+ * ==========================================================================*/
+
+/**
+ * @brief Lädt bei vorhandenem Token die Userdaten.
+ */
+onMounted(async () => {
+    if (authStore.token) {
+        try {
+            await authStore.fetchUser()
+        } catch (error) {
+            console.error('Failed to fetch user:', error)
+        }
+    }
 })
 </script>

@@ -13,6 +13,8 @@ import { useUiStore } from "@/stores/ui";
 const SignIn = () => import("@/views/auth/SignInView.vue");
 // Übersicht
 const Dashboard = () => import("@/views/DashboardView.vue");
+// Einstellungen
+const Branding = () => import("@/views/admin/BrandingView.vue");
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -25,6 +27,7 @@ declare module "vue-router" {
             order?: number;
             hidden?: boolean;
         };
+        breadcrumb?: Array<{ label: string; to?: string }>;
     }
 }
 
@@ -71,8 +74,13 @@ export const routes: RouteRecordRaw[] = [
                 sectionOrder: 1,
                 order: 1,
             },
+            breadcrumb: [{ label: "Home", to: "/" }, { label: "Dashboard" }],
         },
     },
+    /** 4) Webseite (Content) */
+    /** 5) Mediathek */
+    /** 6) Verwaltung (Benutzer) */
+    /** 7) Account/Einstellungen (superAdmin wo nötig) */
 ];
 
 /** =========================
