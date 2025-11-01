@@ -7,7 +7,7 @@
 
 @theme {
     /* Basis */
-    --color-primary-50: #fffaf2;
+    /* --color-primary-50: #fffaf2;
     --color-primary-100: #fff5e6;
     --color-primary-200: #ffebcc;
     --color-primary-300: #ffe0b2;
@@ -17,10 +17,10 @@
     --color-primary-700: #cc7a00;
     --color-primary-800: #b26b00;
     --color-primary-900: #995c00;
-    --color-primary-950: #804c00;
+    --color-primary-950: #804c00; */
 
     /* Optional: Alias für „primary“ auf 500 */
-    --color-primary: var(--color-primary-500);
+    /* --color-primary: var(--color-primary-500); */
 
     --color-gray: #6b7280; /* Grau */
     --color-green: #10b981; /* Grün */
@@ -56,15 +56,183 @@
 
     --text-h6: 1rem; /* 16px */
     --leading-h6: 1.625;
+
+    /* === Primary === */
+    --color-primary-100: #ffeacc;
+    --color-primary-200: #ffd699;
+    --color-primary-300: #ffbf66;
+    --color-primary-400: #ffaa33;
+    --color-primary-500: #ff9900; /* base */
+    --color-primary-600: #e68900;
+    --color-primary-700: #cc7a00;
+    --color-primary-800: #b36a00;
+    --color-primary-900: #995c00;
+    --color-primary: var(--color-primary-500);
+
+    /* === Text === */
+    --color-text-100: #ffffff;
+    --color-text-200: #f5f5f5;
+    --color-text-300: #e5e5e5;
+    --color-text-400: #d4d4d4;
+    --color-text-500: var(--text-white);
+    --color-text-600: #a3a3a3;
+    --color-text-700: #737373;
+    --color-text-800: #525252;
+    --color-text-900: #404040;
+    --color-text: var(--color-text-500);
+
+    /* === Background === */
+    --color-background-100: #ffffff;
+    --color-background-200: #fcfcfc;
+    --color-background-300: #fafbfb;
+    --color-background-400: #f9f9fa;
+    --color-background-500: #f8f9fa; /* base */
+    --color-background-600: #e9ecef;
+    --color-background-700: #dee2e6;
+    --color-background-800: #ced4da;
+    --color-background-900: #adb5bd;
+    --color-background: var(--color-background-500);
+
+    /* === Accent === */
+    --color-accent-100: #d1fae5;
+    --color-accent-200: #a7f3d0;
+    --color-accent-300: #6ee7b7;
+    --color-accent-400: #34d399;
+    --color-accent-500: #10b981; /* base */
+    --color-accent-600: #059669;
+    --color-accent-700: #047857;
+    --color-accent-800: #065f46;
+    --color-accent-900: #064e3b;
+    --color-accent: var(--color-accent-500);
+
+    /* === Accent Text === */
+    --color-accent-text-100: #ffffff;
+    --color-accent-text-200: #f5f5f5;
+    --color-accent-text-300: #e5e5e5;
+    --color-accent-text-400: #d4d4d4;
+    --color-accent-text-500: var(--text-white);
+    --color-accent-text-600: #a3a3a3;
+    --color-accent-text-700: #737373;
+    --color-accent-text-800: #525252;
+    --color-accent-text-900: #404040;
+    --color-accent-text: var(--color-accent-text-500);
+
+    /* === Accent Background === */
+    --color-accent-background-100: #ffffff;
+    --color-accent-background-200: #fafafa;
+    --color-accent-background-300: #f5f5f5;
+    --color-accent-background-400: #f0f0f0;
+    --color-accent-background-500: var(--bg-white);
+    --color-accent-background-600: #e5e5e5;
+    --color-accent-background-700: #d4d4d4;
+    --color-accent-background-800: #a3a3a3;
+    --color-accent-background-900: #737373;
+    --color-accent-background: var(--color-accent-background-500);
+
+    /* === Sidebar Background === */
+    --color-sidebar-background-100: #ffffff;
+    --color-sidebar-background-200: #fafafa;
+    --color-sidebar-background-300: #f5f5f5;
+    --color-sidebar-background-400: #f0f0f0;
+    --color-sidebar-background-500: var(--bg-white);
+    --color-sidebar-background-600: #e5e5e5;
+    --color-sidebar-background-700: #d4d4d4;
+    --color-sidebar-background-800: #a3a3a3;
+    --color-sidebar-background-900: #737373;
+    --color-sidebar-background: var(--color-sidebar-background-500);
+
+    /* === Sidebar Text === */
+    --color-sidebar-text-100: #f9fafb;
+    --color-sidebar-text-200: #f3f4f6;
+    --color-sidebar-text-300: #e5e7eb;
+    --color-sidebar-text-400: #d1d5db;
+    --color-sidebar-text-500: #1f2937; /* base */
+    --color-sidebar-text-600: #111827;
+    --color-sidebar-text-700: #0f172a;
+    --color-sidebar-text-800: #0b1220;
+    --color-sidebar-text-900: #070c16;
+    --color-sidebar-text: var(--color-sidebar-text-500);
+
+    /* === Nav Background === */
+    --color-nav-background-100: #ffffff;
+    --color-nav-background-200: #fafafa;
+    --color-nav-background-300: #f5f5f5;
+    --color-nav-background-400: #f0f0f0;
+    --color-nav-background-500: #ffffff; /* base */
+    --color-nav-background-600: #e5e5e5;
+    --color-nav-background-700: #d4d4d4;
+    --color-nav-background-800: #a3a3a3;
+    --color-nav-background-900: #737373;
+    --color-nav-background: var(--color-nav-background-500);
+
+    /* === Nav Text === */
+    --color-nav-text-100: #f9fafb;
+    --color-nav-text-200: #f3f4f6;
+    --color-nav-text-300: #e5e7eb;
+    --color-nav-text-400: #d1d5db;
+    --color-nav-text-500: #1f2937; /* base */
+    --color-nav-text-600: #111827;
+    --color-nav-text-700: #0f172a;
+    --color-nav-text-800: #0b1220;
+    --color-nav-text-900: #070c16;
+    --color-nav-text: var(--color-nav-text-500);
 }
 
 @layer base {
-    :root {
+    /* :root {
         --brand-blue: #1e3a8a;
         --brand-gray: #6b7280;
         --brand-green: #10b981;
-    }
+    } */
 }
 
 @layer base {
+}
+
+:root {
+    /* --color-primary: #ff9900;
+    --color-text: #67748e;
+    --color-background: #f8f9fa;
+
+    --color-accent: #10b981;
+    --color-accent-text: #ffffff;
+    --color-accent-background: #f8f9fa;
+
+    --color-sidebar-background: #ffffff;
+    --color-sidebar-text: #1f2937;
+
+    --color-nav-background: #ffffff;
+    --color-nav-text: #1f2937; */
+}
+
+html.dark {
+    /* Werte werden zur Laufzeit überschrieben; hier nur Fallbacks falls JS sehr spät kommt */
+    /* --color-primary: #ff9900;
+    --color-text: #ffffff;
+    --color-background: #1e293b;
+
+    --color-accent: #10b981;
+    --color-accent-text: #ffffff;
+    --color-accent-background: #1e293b;
+
+    --color-sidebar-background: #0f172a;
+    --color-sidebar-text: #ffffff;
+
+    --color-nav-background: #0f172a;
+    --color-nav-text: #ffffff; */
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    color: var(--color-primary);
 }

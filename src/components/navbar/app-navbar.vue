@@ -1,7 +1,7 @@
 <!-- src/components/nav/app-navbar.vue -->
 <template>
     <nav
-        class="relative mx-6 rounded-2xl px-0 py-2 transition-all duration-250 ease-soft-in shadow-none lg:flex-nowrap lg:justify-start">
+        class="relative mx-6 my-4 rounded-2xl px-0 py-0 transition-all duration-250 ease-soft-in shadow-none lg:flex-nowrap lg:justify-start bg-nav-background border border-nav-background-800">
         <div class="flex w-full flex-wrap items-center justify-between px-4 py-1">
             <!-- Breadcrumbs + Page Title -->
             <ScBreadcrumb :from-router="false" :items="breadcrumbItems" aria-label="Breadcrumb" separator="/" />
@@ -9,18 +9,15 @@
             <!-- Right cluster -->
             <div class="mt-2 flex grow items-center sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto ">
                 <!-- Right actions -->
-                <!-- <ul class="md-max:w-full mb-0 flex list-none flex-row items-center justify-end pl-0 gap-1"> -->
                 <ul class="mb-0 flex w-full flex-wrap items-center lg:justify-end gap-1 pl-0 lg:w-auto justify-between">
                     <!-- Search e) -->
-                    <!-- <li class="xl:hidden flex items-center pl-4"> -->
                     <li class="order-1 flex items-center pl-0 flex-1 min-w-[50%] lg:order-0 lg:flex-none lg:min-w-0">
                         <ScSearch v-model="search" :placeholder="placeholder" :manual="true"
                             :filters="{ user: ['user', 'u'], status: ['status', 'st'], order: ['order', 'ord', '#'] }"
                             @search="$emit('search', search)" />
                     </li>
                     <!-- Burger (mobile) -->
-                    <!-- <li class="xl:hidden flex items-center pl-4"> -->
-                    <li class="order-1 flex items-center pl-2 lg:order-0">
+                    <li class="order-1 xl:hidden flex items-center pl-2 lg:order-0">
                         <ScButton variant="ghost" tone="neutral" size="sm" class="rounded-2xl px-2 py-2"
                             aria-label="Open sidenav" @click="$emit('toggle-sidenav')">
                             <template #prefix>
@@ -57,7 +54,8 @@
                             </template>
 
                             <!-- Panel -->
-                            <div class="min-w-72 max-w-sm rounded-xl border border-muted/20 bg-white shadow-lg p-1">
+                            <div
+                                class="min-w-72 max-w-sm rounded-xl border border-accent-background-800 bg-accent-background shadow-lg p-1">
                                 <div v-if="!notifications?.length" class="px-3 py-6 text-sm text-muted text-center">
                                     Keine Benachrichtigungen
                                 </div>
@@ -71,12 +69,12 @@
                                     </span>
 
                                     <span class="min-w-0 grow flex flex-col">
-                                        <span class="font-medium text-slate-800 truncate">
+                                        <span class="font-medium text-text-800 truncate">
                                             {{ n.title }}
                                             <span v-if="n.unread"
                                                 class="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600 align-middle"></span>
                                         </span>
-                                        <span v-if="n.message" class="text-slate-600 truncate">{{ n.message }}</span>
+                                        <span v-if="n.message" class="text-text-600 truncate">{{ n.message }}</span>
                                     </span>
 
                                     <span v-if="n.time" class="ml-2 shrink-0 text-xs text-muted">{{ n.time }}</span>
@@ -127,10 +125,11 @@
                             </template>
 
                             <!-- Panel -->
-                            <div class="min-w-60 rounded-xl border border-muted/20 bg-white shadow-lg p-1">
+                            <div
+                                class="min-w-60 rounded-xl border border-accent-background-800 bg-accent-background shadow-lg p-1">
                                 <!-- Header -->
                                 <div class="px-3 py-2 text-xs text-muted border-b border-muted/20">
-                                    <div class="font-medium text-sm text-primary">{{ displayName }}</div>
+                                    <div class="font-bold text-sm text-primary">{{ displayName }}</div>
                                     <div class="truncate">{{ displayEmail }}</div>
                                 </div>
 
@@ -436,13 +435,15 @@ function onSelectNotification(val: unknown) {
 
 /* Erstes (Pages) & Zwischenteile dezent grau */
 :deep(nav[data-component="sc-breadcrumb"] [data-role="item"]:not([data-last="true"])) {
-    color: #94a3b8;
+    /* color: #94a3b8; */
+    color: var(--color-text-400);
     /* slate-400 */
 }
 
 /* Aktueller Eintrag: dunkel + semibold */
 :deep(nav[data-component="sc-breadcrumb"] [data-role="item"][data-last="true"] [data-role="current"]) {
-    color: #0f172a;
+    /* color: #0f172a; */
+    color: var(--color-text);
     /* slate-900 */
     font-weight: 600;
     /* semibold */

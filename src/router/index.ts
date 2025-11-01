@@ -5,6 +5,8 @@ import { mainRoles, adminOnly, superAdmin, hasAccess } from "@/types/roles";
 
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
+import { useSettingsStore } from "@/stores/settingsStore";
+import { useTheme } from "@/composables/useTheme";
 
 /** =========================
  *   VIEWS (Lazy Loaded)
@@ -14,7 +16,7 @@ const SignIn = () => import("@/views/auth/SignInView.vue");
 // Übersicht
 const Dashboard = () => import("@/views/DashboardView.vue");
 // Einstellungen
-const Branding = () => import("@/views/admin/BrandingView.vue");
+const Settings = () => import("@/views/settings/SettingsView.vue");
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -81,6 +83,26 @@ export const routes: RouteRecordRaw[] = [
     /** 5) Mediathek */
     /** 6) Verwaltung (Benutzer) */
     /** 7) Account/Einstellungen (superAdmin wo nötig) */
+    {
+        path: "/settings",
+        name: "Settings",
+        component: Settings,
+        meta: {
+            requiresAuth: true,
+            roles: adminOnly,
+            sidebar: {
+                title: "Branding & Einstellungen",
+                icon: "settings",
+                section: "Einstellungen",
+                sectionOrder: 99,
+                order: 1,
+            },
+            breadcrumb: [
+                { label: "Home", to: "/" },
+                { label: "Branding & Einstellungen" },
+            ],
+        },
+    },
 ];
 
 /** =========================
@@ -97,8 +119,10 @@ const router = createRouter({
 /** =========================
  *   NAVIGATION GUARDS
  * ========================= */
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
+    const settings = useSettingsStore();
+    const { applyTheme } = useTheme();
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
         // If the route requires authentication and the user is not authenticated,
@@ -106,6 +130,10 @@ router.beforeEach((to, from, next) => {
         next({ name: "SignIn" });
     } else {
         // Otherwise, allow navigation.
+        if (authStore.token) {
+            await settings.load();
+            if (settings.settings?.theme) applyTheme(settings.settings.theme);
+        }
         next();
     }
 });

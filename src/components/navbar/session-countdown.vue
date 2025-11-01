@@ -1,7 +1,7 @@
 <!-- src/components/nav/SessionCountdown.vue -->
 <template>
     <div v-if="hasToken" class="flex items-center gap-2">
-        <span class="text-sm text-slate-500">Sitzung:</span>
+        <span class="text-sm text-text">Sitzung:</span>
 
         <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium" :class="badgeClass">
             <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"

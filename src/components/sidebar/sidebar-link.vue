@@ -1,7 +1,7 @@
 <!-- src/components/sidebar/sidebar-link.vue -->
 <template>
     <RouterLink :to="to" class="group flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition-colors"
-        :class="isActive ? 'bg-primary/10 text-primary' : 'text-muted hover:bg-primary/5 hover:text-primary'">
+        :class="isActive ? 'bg-primary/5 text-primary' : 'text-muted hover:bg-primary/5 hover:text-text'">
         <!-- Wrapper übernimmt Klassen/A11y; Icon bekommt nur den Namen -->
         <span v-if="icon" class="h-5 w-5 shrink-0 inline-flex items-center justify-center" aria-hidden="true">
             <UiIcon :name="icon" />

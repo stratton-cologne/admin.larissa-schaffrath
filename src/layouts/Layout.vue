@@ -2,7 +2,7 @@
 <template>
     <Notifications />
 
-    <Sidebar v-if="!hideChrome" :logo-src="logoUrl" :brand-name="appTitle" brand-to="/" :show-section-titles="true"
+    <Sidebar v-if="!hideChrome" :logo-src="logoUrl" :brand-name="brandTitle" brand-to="/" :show-section-titles="true"
         :show-help-card="false" :show-cta="true" />
 
     <main
@@ -36,6 +36,7 @@ import AppNavbar from '@/components/navbar/app-navbar.vue'
 /** Stores */
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
+import { useSettingsStore } from '@/stores/settingsStore'
 
 /** Composables */
 import { useLogoUrl } from '@/composables/useLogoUrl'
@@ -49,6 +50,18 @@ const authStore = useAuthStore()
 const ui = useUiStore()
 
 const { appTitle, logoUrl } = useLogoUrl()
+
+const settings = useSettingsStore()
+
+/**
+ * Sidebar-Brand-Titel:
+ * - wenn Admin-Settings geladen: settings.settings.title
+ * - sonst Fallback: Env-Titel (useLogoUrl().appTitle)
+ */
+const brandTitle = computed(() => {
+    const t = settings.settings?.title?.trim()
+    return t && t.length ? t : appTitle
+})
 
 /**
  * @brief Steuert, ob die Chrome (Sidebar + Navbar) angezeigt wird.

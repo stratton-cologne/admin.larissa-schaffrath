@@ -5,32 +5,32 @@
         @click="ui.closeSidebar()"></div>
 
     <aside class="ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 w-[calc(100%-2rem)] max-w-56
-               flex-wrap items-start justify-between rounded-2xl border-0 bg-white p-0 antialiased shadow-none
-               transition-transform duration-200 flex flex-col" :class="[
+               flex-wrap items-start justify-between rounded-2xl border border-sidebar-background-800 bg-sidebar-background p-0 antialiased shadow-none
+               transition-transform duration-200 flex flex-col overflow-x-hidden" :class="[
                 // mobil: vom Store gesteuert
                 ui.sidebarOpen ? 'translate-x-0' : '-translate-x-full',
                 // ab xl immer sichtbar
-                'xl:left-0 xl:translate-x-0 xl:bg-transparent'
+                'xl:left-0 xl:translate-x-0'
             ]" @keydown.esc="ui.closeSidebar()">
         <!-- Brand -->
         <div class="px-4 py-2 border-b border-muted/20">
-            <RouterLink class=" m-0 whitespace-nowrap px-0 py-1 text-sm text-slate-700" :to="brandTo"
+            <RouterLink class=" m-0 whitespace-nowrap px-0 py-1 text-sm text-primary! font-bold" :to="brandTo"
                 :class="logoSrc ? 'flex flex-nowrap flex-row items-center gap-x-2' : 'block'">
                 <img v-if="logoSrc" :src="logoSrc" alt="main_logo"
                     class="inline h-full max-h-8 max-w-full transition-all duration-200 ease-nav-brand" />
-                <span class="font-display text-lg text-primary">{{ brandName }}</span>
+                <span class="truncate font-display text-lg">{{ brandName }}</span>
             </RouterLink>
         </div>
 
         <!-- Sections -->
-        <div class="flex-1 overflow-auto px-2 py-4">
+        <div class="w-full flex-1 overflow-auto px-2 py-4">
             <SidebarSection :groups="groups" />
         </div>
 
         <!-- Logout (Footer) -->
-        <div class="border-t border-gray-300 w-full mt-auto" v-if="showHelpCard || showCta">
+        <div class="border-t border-primary-300 w-full mt-auto" v-if="showHelpCard || showCta">
             <button type="button" @click="logout" class="w-full inline-flex items-center gap-2 rounded-2xl px-3 text-sm transition-colors
-                       text-muted hover:bg-primary/5 hover:text-primary">
+                       text-muted hover:bg-primary/40 hover:text-text">
                 <span class="h-5 w-5 inline-flex items-center justify-center" aria-hidden="true">
                     <UiIcon name="user" />
                 </span>
