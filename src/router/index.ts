@@ -15,6 +15,9 @@ import { useTheme } from "@/composables/useTheme";
 const SignIn = () => import("@/views/auth/SignInView.vue");
 // Übersicht
 const Dashboard = () => import("@/views/DashboardView.vue");
+// Mediathek
+const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
+const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
 // Einstellungen
 const Settings = () => import("@/views/settings/SettingsView.vue");
 
@@ -81,6 +84,38 @@ export const routes: RouteRecordRaw[] = [
     },
     /** 4) Webseite (Content) */
     /** 5) Mediathek */
+    {
+        path: "/media/list",
+        name: "MediaList",
+        component: MediaLibrary,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            sidebar: {
+                title: "Mediathek",
+                icon: "image",
+                section: "Mediathek",
+                sectionOrder: 4,
+                order: 1,
+            },
+        },
+    },
+    {
+        path: "/media/deleted",
+        name: "MediaDeleted",
+        component: MediaDeleted,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            sidebar: {
+                title: "Papierkorb",
+                icon: "trash",
+                section: "Mediathek",
+                sectionOrder: 4,
+                order: 2,
+            },
+        },
+    },
     /** 6) Verwaltung (Benutzer) */
     /** 7) Account/Einstellungen (superAdmin wo nötig) */
     {
