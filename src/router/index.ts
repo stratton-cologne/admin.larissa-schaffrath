@@ -15,6 +15,12 @@ import { useTheme } from "@/composables/useTheme";
 const SignIn = () => import("@/views/auth/SignInView.vue");
 // Übersicht
 const Dashboard = () => import("@/views/DashboardView.vue");
+// Webseite (Content)
+// Webseite (Content)
+const GalleriesList = () =>
+    import("@/views/website/galleries/GalleriesListView.vue");
+const GalleryDetail = () =>
+    import("@/views/website/galleries/GalleryDetailView.vue");
 // Mediathek
 const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
 const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
@@ -86,6 +92,47 @@ export const routes: RouteRecordRaw[] = [
         },
     },
     /** 4) Webseite (Content) */
+    {
+        path: "/content/galleries",
+        name: "GalleriesList",
+        component: GalleriesList,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            title: "Galerien",
+            sidebar: {
+                title: "Galerien",
+                icon: "images",
+                section: "Webseite",
+                sectionOrder: 3,
+                order: 2,
+            },
+            breadcrumb: [
+                { label: "Content", to: "/content/galleries" },
+                { label: "Galerien" },
+            ],
+        },
+    },
+    {
+        path: "/content/galleries/:id",
+        name: "GalleryDetail",
+        component: GalleryDetail,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            title: "Gallerie Detail",
+            sidebar: {
+                hidden: true,
+                section: "Webseite",
+                sectionOrder: 3,
+            },
+            breadcrumb: [
+                { label: "Content", to: "/content/galleries" },
+                { label: "Galleries", to: "/content/galleries" },
+                { label: "Detail" },
+            ],
+        },
+    },
     /** 5) Mediathek */
     {
         path: "/media/list",

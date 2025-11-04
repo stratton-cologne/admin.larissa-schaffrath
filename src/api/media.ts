@@ -13,7 +13,7 @@ export type MediaVersion = {
 export type MediaItem = {
     id: number;
     uuid: string;
-    title?: string;
+    title?: string | null;
     collection?: string;
     current_version_id?: number;
     current_version?: MediaVersion;
