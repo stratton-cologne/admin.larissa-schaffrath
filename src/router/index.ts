@@ -18,6 +18,9 @@ const Dashboard = () => import("@/views/DashboardView.vue");
 // Mediathek
 const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
 const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
+// Benutzer
+const UsersList = () => import("@/views/users/UsersListView.vue");
+const UsersDeleted = () => import("@/views/users/UsersDeletedView.vue");
 // Einstellungen
 const Settings = () => import("@/views/settings/SettingsView.vue");
 
@@ -117,6 +120,38 @@ export const routes: RouteRecordRaw[] = [
         },
     },
     /** 6) Verwaltung (Benutzer) */
+    {
+        path: "/users/list",
+        name: "UsersList",
+        component: UsersList,
+        meta: {
+            requiresAuth: true,
+            roles: superAdmin,
+            sidebar: {
+                title: "Benutzer",
+                icon: "users",
+                section: "Verwaltung",
+                sectionOrder: 2,
+                order: 1,
+            },
+        },
+    },
+    {
+        path: "/users/deleted",
+        name: "UsersDeleted",
+        component: UsersDeleted,
+        meta: {
+            requiresAuth: true,
+            roles: superAdmin,
+            sidebar: {
+                title: "Gelöschte Benutzer",
+                icon: "user-delete",
+                section: "Verwaltung",
+                sectionOrder: 2,
+                order: 2,
+            },
+        },
+    },
     /** 7) Account/Einstellungen (superAdmin wo nötig) */
     {
         path: "/settings",
