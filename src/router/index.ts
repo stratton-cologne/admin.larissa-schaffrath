@@ -23,6 +23,7 @@ const GalleryDetail = () =>
     import("@/views/website/galleries/GalleryDetailView.vue");
 const PortfolioEdit = () =>
     import("@/views/website/portfolio/PortfolioEditView.vue");
+const ContactEdit = () => import("@/views/website/contact/ContactEditView.vue");
 // Mediathek
 const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
 const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
@@ -153,6 +154,27 @@ export const routes: RouteRecordRaw[] = [
             breadcrumb: [
                 { label: "Content", to: "/content/portfolio" },
                 { label: "Portfolio" },
+            ],
+        },
+    },
+    {
+        path: "/content/contact",
+        name: "ContactEdit",
+        component: ContactEdit,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            title: "Kontakt",
+            sidebar: {
+                title: "Kontakt",
+                section: "Webseite",
+                icon: "contact",
+                sectionOrder: 3,
+                order: 4,
+            },
+            breadcrumb: [
+                { label: "Content", to: "/content/contact" },
+                { label: "Kontakt" },
             ],
         },
     },
