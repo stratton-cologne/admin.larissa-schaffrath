@@ -21,6 +21,8 @@ const GalleriesList = () =>
     import("@/views/website/galleries/GalleriesListView.vue");
 const GalleryDetail = () =>
     import("@/views/website/galleries/GalleryDetailView.vue");
+const PortfolioEdit = () =>
+    import("@/views/website/portfolio/PortfolioEditView.vue");
 // Mediathek
 const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
 const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
@@ -130,6 +132,27 @@ export const routes: RouteRecordRaw[] = [
                 { label: "Content", to: "/content/galleries" },
                 { label: "Galleries", to: "/content/galleries" },
                 { label: "Detail" },
+            ],
+        },
+    },
+    {
+        path: "/content/portfolio",
+        name: "PortfolioEdit",
+        component: PortfolioEdit,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            title: "Portfolio",
+            sidebar: {
+                title: "Portfolio",
+                section: "Webseite",
+                icon: "portfolio",
+                sectionOrder: 3,
+                order: 3,
+            },
+            breadcrumb: [
+                { label: "Content", to: "/content/portfolio" },
+                { label: "Portfolio" },
             ],
         },
     },
