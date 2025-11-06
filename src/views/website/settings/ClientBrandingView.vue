@@ -10,18 +10,37 @@
 
         <div class="flex flex-wrap gap-6">
             <!-- Farben -->
-            <section class="w-full lg:basis-[calc((100%-3rem)/3)] rounded-xl border bg-white p-4 space-y-4">
+            <section
+                class="flex flex-col w-full lg:basis-[calc((100%-3rem)/3)] rounded-xl border bg-white p-4 space-y-4">
+                <div class="flex-1">
+                    <h2 class="font-semibold">Farben</h2>
+                    <div class="flex gap-6 items-center">
+                        <div>
+                            <label class="block text-sm">Primary</label>
+                            <input v-model="form.primary_color" type="color"
+                                class="mt-1 w-16 h-10 p-0 border rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm">Secondary</label>
+                            <input v-model="form.secondary_color" type="color"
+                                class="mt-1 w-16 h-10 p-0 border rounded" />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h2 class="font-semibold">Allgemein</h2>
+                    <!-- Beispiel innerhalb des vorhandenen 'Allgemein'-Abschnitts -->
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-center">
+                        <label class="text-sm font-medium text-slate-700">Brand Name</label>
+                        <input v-model="form.brand_name" type="text"
+                            class="h-10 w-full rounded-lg border px-3 py-2 bg-white border-accent-background-800 text-slate-800" />
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-center">
+                        <label class="text-sm font-medium text-slate-700">Subtitle</label>
+                        <input v-model="form.brand_subtitle" type="text"
+                            class="h-10 w-full rounded-lg border px-3 py-2 bg-white border-accent-background-800 text-slate-800" />
+                    </div>
 
-                <h2 class="font-semibold">Farben</h2>
-                <div class="flex gap-6 items-center">
-                    <div>
-                        <label class="block text-sm">Primary</label>
-                        <input v-model="form.primary_color" type="color" class="mt-1 w-16 h-10 p-0 border rounded" />
-                    </div>
-                    <div>
-                        <label class="block text-sm">Secondary</label>
-                        <input v-model="form.secondary_color" type="color" class="mt-1 w-16 h-10 p-0 border rounded" />
-                    </div>
                 </div>
             </section>
 
@@ -100,7 +119,7 @@
             </section>
 
             <!-- Hintergrund -->
-            <section class="lg:w-1/2 w-full min-w-[300px] rounded-xl border bg-white p-4 space-y-4">
+            <section class="lg:w-1/2 w-full min-w-75 rounded-xl border bg-white p-4 space-y-4">
                 <h2 class="font-semibold">Hintergrund</h2>
                 <div class="flex flex-wrap gap-3 items-center">
                     <select v-model="form.background.type" class="rounded border px-2 py-1 text-sm">
@@ -297,7 +316,9 @@ async function load() {
         secondary_color: s.secondary_color || '#f59e0b',
         primary_font: { name: 'System UI', media_id: null, url: null, ...(s.primary_font || {}) },
         secondary_font: { name: 'System UI', media_id: null, url: null, ...(s.secondary_font || {}) },
-        background: { type: 'none', media_id: null, url: null, fit: 'cover', position: 'center', overlay: 'none', ...(s.background || {}) }
+        background: { type: 'none', media_id: null, url: null, fit: 'cover', position: 'center', overlay: 'none', ...(s.background || {}) },
+        brand_name: s.brand_name ?? '',
+        brand_subtitle: s.brand_subtitle ?? ''
     }
 
     // Quellen aus den Daten herleiten

@@ -21,6 +21,8 @@ export type ClientSettings = {
     primary_font: FontSource;
     secondary_font: FontSource;
     background: Background;
+    brand_name?: string | null;
+    brand_subtitle?: string | null;
 };
 
 export async function fetchClientSettings(): Promise<ClientSettings> {
