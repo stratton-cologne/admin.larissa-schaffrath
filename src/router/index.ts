@@ -24,6 +24,11 @@ const GalleryDetail = () =>
 const PortfolioEdit = () =>
     import("@/views/website/portfolio/PortfolioEditView.vue");
 const ContactEdit = () => import("@/views/website/contact/ContactEditView.vue");
+
+const LegalPages = () =>
+    import("@/views/website/legalTerms/LegalPagesView.vue");
+const ClientBranding = () =>
+    import("@/views/website/settings/ClientBrandingView.vue");
 // Mediathek
 const MediaLibrary = () => import("@/views/media/MediaLibraryView.vue");
 const MediaDeleted = () => import("@/views/media/MediaDeletedView.vue");
@@ -95,6 +100,26 @@ export const routes: RouteRecordRaw[] = [
         },
     },
     /** 4) Webseite (Content) */
+    {
+        path: "/content/client-branding",
+        name: "ClientBranding",
+        component: ClientBranding,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            sidebar: {
+                title: "Branding",
+                section: "Webseite",
+                icon: "portfolio",
+                sectionOrder: 3,
+                order: 1,
+            },
+            breadcrumb: [
+                { label: "Content", to: "/content" },
+                { label: "Branding" },
+            ],
+        },
+    },
     {
         path: "/content/galleries",
         name: "GalleriesList",
@@ -176,6 +201,23 @@ export const routes: RouteRecordRaw[] = [
                 { label: "Content", to: "/content/contact" },
                 { label: "Kontakt" },
             ],
+        },
+    },
+    {
+        path: "/settings/legal",
+        name: "LegalPages",
+        component: LegalPages,
+        meta: {
+            requiresAuth: true,
+            roles: mainRoles,
+            title: "Rechtstexte",
+            sidebar: {
+                title: "Rechtstexte",
+                section: "Webseite",
+                icon: "portfolio",
+                sectionOrder: 3,
+                order: 5,
+            },
         },
     },
     /** 5) Mediathek */
