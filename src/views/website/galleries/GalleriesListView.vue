@@ -82,7 +82,7 @@ const columns: Column[] = [
     { key: 'actions', label: '', headerClass: 'text-right', cellClass: 'text-right' },
 ]
 
-async function load() { rows.value = (await listGalleries())?.data ?? [] }
+async function load() { rows.value = (await listGalleries()) ?? []; }
 async function del(id: number) { await deleteGallery(id); showToast({ key: 'g-del', message: 'Galerie gelöscht', type: 'success', duration: 2200, position: 'top-right' }); await load() }
 
 const openCreate = ref(false)
