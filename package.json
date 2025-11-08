@@ -10,7 +10,7 @@
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix"
     },
     "dependencies": {
-        "@stratton-cologne/ui": "^1.5.0",
+        "@stratton-cologne/ui": "^1.6.0",
         "@stratton-cologne/vue-smart-toast": "^1.1.0",
         "axios": "^1.12.2",
         "docx-preview": "^0.3.7",

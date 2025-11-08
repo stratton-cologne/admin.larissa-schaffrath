@@ -2,7 +2,8 @@
     <div class="flex flex-wrap -mx-3 gab-6">
         <div v-for="(card, idx) in cards" :key="idx"
             class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none  xl:w-1/4">
-            <div class="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+            <div
+                class="relative flex flex-col min-w-0 wrap-break-word bg-white shadow-soft-xl rounded-2xl bg-clip-border">
                 <div class="flex-auto p-4">
                     <div class="flex flex-row -mx-3">
                         <div class="flex-none w-2/3 max-w-full px-3">
@@ -19,7 +20,7 @@
                         </div>
                         <div class="px-3 text-right basis-1/3">
                             <div class="flex items-center justify-center ml-auto w-12 h-12 rounded-lg"
-                                :class="card.iconBg || 'bg-gradient-to-tl from-primary-700 to-primary-500'">
+                                :class="card.iconBg || 'bg-linear-to-tl from-primary-700 to-primary-500'">
                                 <UiIcon :name="card.icon" class="w-6 h-6 text-lg relative text-white leading-none"
                                     color="#ffffff" />
                             </div>
