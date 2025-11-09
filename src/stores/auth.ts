@@ -2,6 +2,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import axios from "@/lib/axios";
+import router from "@/router";
 import type { User } from "@/types";
 
 export const useAuthStore = defineStore("auth", () => {
@@ -18,6 +19,11 @@ export const useAuthStore = defineStore("auth", () => {
     const clearToken = () => {
         token.value = null;
         localStorage.removeItem("token");
+    };
+
+    const clearAuth = () => {
+        clearToken();
+        user.value = null;
     };
 
     const login = async (email: string, password: string) => {
@@ -37,8 +43,14 @@ export const useAuthStore = defineStore("auth", () => {
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
-            clearToken();
-            user.value = null;
+            clearAuth();
+            // Optional: auf Login mit Rückkehr-URL
+            const redirect = router.currentRoute.value.fullPath || "/";
+            if (router.currentRoute.value.name !== "SignIn") {
+                router
+                    .push({ name: "SignIn", query: { redirect } })
+                    .catch(() => {});
+            }
         }
     };
 
@@ -63,6 +75,9 @@ export const useAuthStore = defineStore("auth", () => {
         user,
         token,
         isAuthenticated,
+        setToken,
+        clearToken,
+        clearAuth,
         login,
         logout,
         fetchUser,

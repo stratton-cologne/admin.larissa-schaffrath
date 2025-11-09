@@ -48,7 +48,7 @@ dist-ssr/
 ############################################################
 # Umgebungsvariablen und Build-spezifische Dateien
 ############################################################
-*.env
+*.env*
 *.tsbuildinfo
 package-lock.json
 

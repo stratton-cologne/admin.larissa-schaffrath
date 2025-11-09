@@ -24,8 +24,10 @@
  *  - Farbcode: grün (ok), amber (läuft bald ab), rot (abgelaufen).
  */
 
-import { computed } from 'vue'
+import { computed, watch, onMounted, ref } from 'vue'
 import { useSessionTimer } from '@/composables/useSessionTimer'
+import { useAuthStore } from '@/stores/auth'
+import router from '@/router'
 
 defineOptions({ name: 'SessionCountdown' })
 
@@ -42,6 +44,56 @@ defineOptions({ name: 'SessionCountdown' })
  *   - `isExpired`: bereits abgelaufen
  */
 const { hasToken, remainingSec, isExpiringSoon, isExpired } = useSessionTimer(1000)
+
+/* ============================================================================
+ * Auto-Redirect bei Ablauf
+ * ==========================================================================*/
+
+/**
+ * @brief Verhindert Mehrfach-Redirects/Toasts bei simultanen Auslösern.
+ */
+const didRedirect = ref(false)
+
+/**
+ * @brief Führt den eigentlichen Redirect auf die Login-Seite aus
+ *        und leert dabei den Auth-Status (Store + Storage).
+ * @details
+ *  - Setzt eine Rückkehr-URL (query ?redirect=/pfad), damit man nach Login
+ *    wieder an die ursprüngliche Stelle gelangt.
+ */
+function redirectToLoginOnce() {
+    if (didRedirect.value) return
+    didRedirect.value = true
+
+    const auth = useAuthStore()
+    auth.clearAuth()
+
+    const current = router.currentRoute.value
+    const redirect = current.fullPath || '/'
+    if (current.name !== 'SignIn') {
+        // Fehler bewusst geschluckt, falls während Navigation neue Guards feuern
+        router.push({ name: 'SignIn', query: { redirect } }).catch(() => { })
+    }
+}
+
+/**
+ * @brief Reagiert live auf Ablauf (remainingSec === 0).
+ */
+watch(isExpired, (expired) => {
+    if (expired && hasToken.value) {
+        redirectToLoginOnce()
+    }
+})
+
+/**
+ * @brief Falls der Timer schon beim Mounten abgelaufen ist (Race-Condition),
+ *        direkt umleiten.
+ */
+onMounted(() => {
+    if (isExpired.value && hasToken.value) {
+        redirectToLoginOnce()
+    }
+})
 
 /* ============================================================================
  * Darstellung

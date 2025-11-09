@@ -251,7 +251,7 @@ async function loadPreview(mediaId?: number, mime?: string) {
         return
     }
     try {
-        const blob = await fetchMediaBlob(mediaId) // lädt mit Authorization
+        const blob = await fetchMediaBlob(mediaId)
         const url = URL.createObjectURL(blob)
         objectUrls.add(url)
         previews.value[mediaId] = url
@@ -283,14 +283,15 @@ const imageRows = computed(() =>
         const mediaId = img.media?.id as number | undefined
         return {
             __raw: img,
-            previewUrl: mediaId ? (previews.value[mediaId] || '') : '',
+            previewUrl: mediaId ? previews.value[mediaId] || '' : '',
             isImage: (img.media?.current_version?.mime_type || '').startsWith('image/'),
             originalName: img.media?.current_version?.original_name,
             mime: img.media?.current_version?.mime_type,
-            titleOrName: img.media?.title || img.media?.current_version?.original_name,
+            // Nur Dateiname nutzen; media.title existiert im Typ nicht
+            titleOrName: img.media?.current_version?.original_name,
             caption: img.caption,
             position: img.position,
-            mediaId: mediaId,
+            mediaId,
             categories: img.categories || [],
         }
     }),
@@ -313,108 +314,81 @@ async function load() {
         }
     } catch (e) {
         console.error(e)
-        showToast({ key: 'load-g', message: errMsg(e, 'Galerie konnte nicht geladen werden'), type: 'error', duration: 3500, position: 'top-right' })
+        showToast({
+            key: 'load-g',
+            message: errMsg(e, 'Galerie konnte nicht geladen werden'),
+            type: 'error',
+            duration: 3500,
+            position: 'top-right',
+        })
     }
 }
 
 async function loadAux() {
     try {
-        const mediaResp = await listMedia({ perPage: 48 } as any)
-        media.value = (mediaResp?.data ?? []) as MediaItem[]
-        // Previews für Mediathek-Kacheln (nur Bilder)
-        for (const m of media.value) await loadPreview(m.id, m.current_version?.mime_type || '')
-    } catch (e) {
-        console.error(e)
-        showToast({ key: 'load-media', message: errMsg(e, 'Mediathek konnte nicht geladen werden'), type: 'error', duration: 3500, position: 'top-right' })
-    }
-    try {
+        const page = await listMedia({ perPage: 100 } as any)
+        media.value = (page as any).data ?? (page as any)
+        for (const m of media.value) {
+            await loadPreview(m.id, m.current_version?.mime_type || '')
+        }
         categories.value = await listCategories()
     } catch (e) {
         console.error(e)
-        showToast({ key: 'load-cat', message: errMsg(e, 'Kategorien konnten nicht geladen werden'), type: 'error', duration: 3500, position: 'top-right' })
     }
 }
 
-/* Save gallery */
-async function saveGallery() {
-    busy.value = true
-    try {
-        await updateGallery(id, form.value)
-        showToast({ key: 'g-saved', message: 'Galerie gespeichert', type: 'success', duration: 2200, position: 'top-right' })
-        openEdit.value = false
-        await load()
-        await refreshPreviews()
-    } catch (e) {
-        console.error(e)
-        showToast({ key: 'g-save-err', message: errMsg(e, 'Galerie konnte nicht gespeichert werden'), type: 'error', duration: 3500, position: 'top-right' })
-    } finally {
-        busy.value = false
-    }
-}
-
-/* Add from media library */
+/* Bilder hinzufügen */
 function toggleSelect(mid: number) {
-    selected.value.has(mid) ? selected.value.delete(mid) : selected.value.add(mid)
+    if (selected.value.has(mid)) selected.value.delete(mid)
+    else selected.value.add(mid)
 }
 async function appendSelected() {
+    if (!selected.value.size) return
     busy.value = true
     try {
-        const catArr = categoryToApply.value ? [categoryToApply.value] : []
         for (const mid of selected.value) {
-            await addGalleryImage(id, { media_id: mid, categories: catArr })
+            await addGalleryImage(id, {
+                media_id: mid,
+                caption: '',
+                // KORREKT: API erwartet "categories" (IDs), nicht "category_ids"
+                categories: categoryToApply.value ? [categoryToApply.value] : [],
+            } as any)
         }
-        showToast({ key: 'g-img-added', message: 'Bilder verknüpft', type: 'success', duration: 2200, position: 'top-right' })
-        openAddImage.value = false
         selected.value.clear()
         await load()
         await refreshPreviews()
+        showToast({ key: 'g-img-added', message: 'Bilder hinzugefügt', type: 'success', duration: 1800, position: 'top-right' })
     } catch (e) {
         console.error(e)
-        showToast({ key: 'g-img-add-err', message: errMsg(e, 'Bilder konnten nicht hinzugefügt werden'), type: 'error', duration: 4000, position: 'top-right' })
-    } finally {
-        busy.value = false
-    }
-}
-
-/* Edit single image */
-function openEditImage(img: GImg) {
-    editImg.value = img
-    editCaption.value = img.caption || ''
-    editPosition.value = Number(img.position || 0)
-    editCategoryIds.value = (img.categories || []).map((c: any) => c.id)
-    openEditImg.value = true
-}
-async function saveImage() {
-    if (!editImg.value) return
-    busy.value = true
-    try {
-        await updateGalleryImage(id, editImg.value.id, {
-            caption: editCaption.value,
-            position: editPosition.value,
-            categories: editCategoryIds.value,
+        showToast({
+            key: 'g-img-add-err',
+            message: errMsg(e, 'Bilder konnten nicht hinzugefügt werden'),
+            type: 'error',
+            duration: 3500,
+            position: 'top-right',
         })
-        showToast({ key: 'g-img-upd', message: 'Bild aktualisiert', type: 'success', duration: 2000, position: 'top-right' })
-        openEditImg.value = false
-        await load()
-        await refreshPreviews()
-    } catch (e) {
-        console.error(e)
-        showToast({ key: 'g-img-upd-err', message: errMsg(e, 'Bild konnte nicht aktualisiert werden'), type: 'error', duration: 3500, position: 'top-right' })
     } finally {
         busy.value = false
     }
 }
 
-/* Inline position update */
+/* Bestand ändern */
 async function updatePos(img: GImg, val: string) {
-    const pos = Math.max(0, parseInt(val || '0', 10))
+    const pos = Number(val)
+    if (!Number.isFinite(pos)) return
     try {
-        await updateGalleryImage(id, img.id, { position: pos })
+        await updateGalleryImage(id, img.id, { position: pos } as any)
         await load()
-        await refreshPreviews()
+        showToast({ key: 'g-pos-upd', message: 'Position gespeichert', type: 'success', duration: 1600, position: 'top-right' })
     } catch (e) {
         console.error(e)
-        showToast({ key: 'g-pos-err', message: errMsg(e, 'Position konnte nicht gespeichert werden'), type: 'error', duration: 3500, position: 'top-right' })
+        showToast({
+            key: 'g-pos-err',
+            message: errMsg(e, 'Position konnte nicht geändert werden'),
+            type: 'error',
+            duration: 3000,
+            position: 'top-right',
+        })
     }
 }
 
@@ -427,7 +401,75 @@ async function remove(imageId: number) {
         await refreshPreviews()
     } catch (e) {
         console.error(e)
-        showToast({ key: 'g-img-rem-err', message: errMsg(e, 'Bild konnte nicht entfernt werden'), type: 'error', duration: 3500, position: 'top-right' })
+        showToast({
+            key: 'g-img-rem-err',
+            message: errMsg(e, 'Bild konnte nicht entfernt werden'),
+            type: 'error',
+            duration: 3500,
+            position: 'top-right',
+        })
+    }
+}
+
+/* Einzelbild bearbeiten */
+function openEditImage(img: GImg) {
+    editImg.value = img
+    editCaption.value = img.caption || ''
+    editPosition.value = img.position || 0
+    editCategoryIds.value = (img.categories || []).map((c) => c.id)
+    openEditImg.value = true
+}
+async function saveImage() {
+    if (!editImg.value) return
+    busy.value = true
+    try {
+        await updateGalleryImage(id, editImg.value.id, {
+            caption: editCaption.value,
+            position: editPosition.value,
+            // KORREKT: "categories"
+            categories: editCategoryIds.value,
+        } as any)
+        openEditImg.value = false
+        await load()
+        await refreshPreviews()
+        showToast({ key: 'g-img-saved', message: 'Bild gespeichert', type: 'success', duration: 1800, position: 'top-right' })
+    } catch (e) {
+        console.error(e)
+        showToast({
+            key: 'g-img-save-err',
+            message: errMsg(e, 'Konnte nicht speichern'),
+            type: 'error',
+            duration: 3200,
+            position: 'top-right',
+        })
+    } finally {
+        busy.value = false
+    }
+}
+
+/* Galerie speichern */
+async function saveGallery() {
+    busy.value = true
+    try {
+        await updateGallery(id, {
+            title: form.value.title,
+            description: form.value.description,
+            is_published: form.value.is_published,
+        } as any)
+        openEdit.value = false
+        await load()
+        showToast({ key: 'g-saved', message: 'Galerie gespeichert', type: 'success', duration: 1800, position: 'top-right' })
+    } catch (e) {
+        console.error(e)
+        showToast({
+            key: 'g-save-err',
+            message: errMsg(e, 'Galerie konnte nicht gespeichert werden'),
+            type: 'error',
+            duration: 3200,
+            position: 'top-right',
+        })
+    } finally {
+        busy.value = false
     }
 }
 
@@ -436,7 +478,7 @@ const newCategoryName = ref('')
 async function addCategory() {
     if (!newCategoryName.value.trim()) return
     try {
-        await createCategory({ name: newCategoryName.value.trim() })
+        await createCategory({ name: newCategoryName.value.trim() } as any)
         newCategoryName.value = ''
         categories.value = await listCategories()
         showToast({ key: 'cat-added', message: 'Kategorie angelegt', type: 'success', duration: 2000, position: 'top-right' })

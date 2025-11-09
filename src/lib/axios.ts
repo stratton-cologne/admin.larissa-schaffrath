@@ -1,9 +1,11 @@
+// src/lib/axios.ts
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import router from "@/router";
 import { useToast } from "@stratton-cologne/vue-smart-toast";
 import { env } from "@/lib/env";
 import { i18n } from "@/i18n";
 import { humanizeAxiosError, errorToastKey, isAxiosError } from "@/lib/http";
+import { useAuthStore } from "@/stores/auth";
 
 const duration = 3500;
 
@@ -42,6 +44,9 @@ instance.interceptors.request.use((config) => {
     return config;
 });
 
+// Debounce gegen Mehrfach-Redirects/Toasts bei parallelen 401ern
+let isHandling401 = false;
+
 instance.interceptors.response.use(
     (response) => {
         const meta = (response.config as AxiosRequestConfig).meta;
@@ -64,26 +69,48 @@ instance.interceptors.response.use(
         return response;
     },
 
-    (error: AxiosError | unknown) => {
+    async (error: AxiosError | unknown) => {
         const cfg = isAxiosError(error)
-            ? (error.config as AxiosRequestConfig | undefined)
+            ? ((error as AxiosError).config as AxiosRequestConfig | undefined)
             : undefined;
         const meta = cfg?.meta;
 
         if (isAxiosError(error) && error.response?.status === 401) {
-            localStorage.removeItem("token");
-            router.push({ name: "SignIn" });
-            if (!meta?.silent) {
-                const { showToast } = useToast();
-                const t = i18n.global.t;
-                showToast({
-                    key: "auth-401",
-                    message: t("toast.http.401") as string,
-                    type: "error",
-                    duration: meta?.duration ?? duration,
-                    position: meta?.position ?? "top-right",
-                });
+            // Token & User IMMER im Store leeren – nicht nur localStorage
+            const auth = useAuthStore();
+            auth.clearAuth();
+
+            // Einmaliger Redirect + Toast
+            if (!isHandling401) {
+                isHandling401 = true;
+                try {
+                    if (!meta?.silent) {
+                        const { showToast } = useToast();
+                        const t = i18n.global.t;
+                        showToast({
+                            key: "auth-401",
+                            message: t("toast.http.401") as string, // „Sitzung abgelaufen“ etc.
+                            type: "error",
+                            duration: meta?.duration ?? duration,
+                            position: meta?.position ?? "top-right",
+                        });
+                    }
+
+                    // Falls wir nicht bereits auf SignIn sind → weiterleiten, inkl. Rückkehr-URL
+                    const current = router.currentRoute.value;
+                    if (current.name !== "SignIn") {
+                        const redirect = current.fullPath || "/";
+                        await router.push({
+                            name: "SignIn",
+                            query: { redirect },
+                        });
+                    }
+                } finally {
+                    // nach kurzem Tick wieder freigeben
+                    setTimeout(() => (isHandling401 = false), 300);
+                }
             }
+
             return Promise.reject(error);
         }
 

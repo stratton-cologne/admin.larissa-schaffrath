@@ -1,3 +1,4 @@
+// src/router/index.ts
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
@@ -15,7 +16,6 @@ import { useTheme } from "@/composables/useTheme";
 const SignIn = () => import("@/views/auth/SignInView.vue");
 // Übersicht
 const Dashboard = () => import("@/views/DashboardView.vue");
-// Webseite (Content)
 // Webseite (Content)
 const GalleriesList = () =>
     import("@/views/website/galleries/GalleriesListView.vue");
@@ -328,18 +328,22 @@ router.beforeEach(async (to, from, next) => {
     const settings = useSettingsStore();
     const { applyTheme } = useTheme();
 
-    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-        // If the route requires authentication and the user is not authenticated,
-        // redirect to the SignIn page.
-        next({ name: "SignIn" });
-    } else {
-        // Otherwise, allow navigation.
-        if (authStore.token) {
-            await settings.load();
-            if (settings.settings?.theme) applyTheme(settings.settings.theme);
-        }
-        next();
+    // Wenn bereits eingeloggt und /signin aufgerufen wird → Dashboard
+    if (to.name === "SignIn" && authStore.isAuthenticated) {
+        return next({ name: "Dashboard" });
     }
+
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        // Merke Ziel als Redirect-Query
+        return next({ name: "SignIn", query: { redirect: to.fullPath } });
+    }
+
+    if (authStore.token) {
+        await settings.load();
+        if (settings.settings?.theme) applyTheme(settings.settings.theme);
+    }
+
+    next();
 });
 
 // After each (Titel, Telemetrie, etc.)

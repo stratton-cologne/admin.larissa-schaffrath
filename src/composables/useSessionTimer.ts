@@ -63,7 +63,12 @@ export function useSessionTimer(pollMs = 1000) {
     let t: number | undefined;
     function start() {
         stop();
-        t = window.setInterval(() => (now.value = Date.now()), pollMs);
+        t = window.setInterval(() => {
+            now.value = Date.now();
+            // Optional: falls Tokens „lautlos“ rotiert werden (ohne storage-Event),
+            // kann man hier in niedriger Frequenz erneut syncen (z. B. jede 10. Taktung).
+            // if ((now.value / pollMs) % 10 === 0) syncFromToken();
+        }, pollMs);
         syncFromToken();
     }
     function stop() {
